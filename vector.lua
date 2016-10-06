@@ -74,6 +74,30 @@ end
 
 
 --[[
+Read a CSV and construct a Torch input dataset.
+--]]
+function loadTrainSet(path)
+  local o = csv:read(path)
+  local ncol = #o[1]
+
+  local dataset = {}  
+  local i = 1
+  -- Generate each row of data
+  fn = function(row)
+    --print(string.format("x=%s, y=%s", x,y))
+    -- TODO: Select first n-1 elements
+    local input = torch.Tensor({x,y})
+    local output = torch.Tensor({row[ncol]})
+    dataset[i] = {input, output}
+    i = i + 1
+  end
+  each(function(row) fn(row) end, o)
+  function dataset:size() return (i - 1) end
+  return dataset
+end
+
+
+--[[
 Convert a Torch training set to a Tensor for batch evaluation of the model.
 
 The training set looks like this:
