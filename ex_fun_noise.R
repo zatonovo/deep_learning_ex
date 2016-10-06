@@ -13,7 +13,7 @@ make_train_set <- function(min, max, by=0.1) {
 # Add uniform noise
 #
 # @examples
-# df <- make_train_set(-4,4)
+# df <- make_train_set(-10,10)
 # df1 <- perturb_unif(df)
 # write.table(df1,'train_w_unif.csv', sep=',', row.names=FALSE, col.names=FALSE)
 perturb_unif <- function(df, mult=4) {
