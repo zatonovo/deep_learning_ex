@@ -23,7 +23,7 @@ http://mdtux89.github.io/2015/12/11/torch-tutorial.html
 Example
 makeTestSet(range(-4,4))
 --]]
-function makeTestSet(a)
+function makeTrainSet(a)
   local dataset = {}  
   local i = 1
   -- Generate each row of data
@@ -42,8 +42,8 @@ end
 
 
 
-print("Make training set")
-trainset = makeTestSet(range(-10,10, 0.05))
+print("Make train set")
+trainset = makeTrainSet(range(-10,10, 0.05))
 
 print("Build network")
 -- Design your network architecture

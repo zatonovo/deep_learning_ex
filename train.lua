@@ -5,6 +5,29 @@ Provide some convenient wrappers around model training and evaluation.
 --]]
 dofile "vector.lua"
 
+
+--[[
+Read a CSV and construct a Torch input dataset.
+--]]
+function loadTrainSet(path)
+  local o = csv.read(path)
+  local ncol = #o[1]
+
+  local dataset = {}  
+  local i = 1
+  -- Generate each row of data
+  fn = function(row)
+    --print(string.format("row: ", row))
+    local trow = torch.Tensor(row)
+    dataset[i] = { trow[{{1,ncol-1}}], torch.Tensor({trow[ncol]}) }
+    i = i + 1
+  end
+  each(function(row) fn(row) end, o)
+  function dataset:size() return (i - 1) end
+  return dataset
+end
+
+
 --[[
 Evaluate a model against the given dataset and optionally write to the
 outfile.
