@@ -14,18 +14,15 @@ make_train_set <- function(min, max, by=0.1) {
 #
 # @examples
 # df <- make_train_set(-10,10)
-# df1 <- perturb_unif(df)
+# df1 <- perturb(df)
 # write.table(df1,'train_w_unif.csv', sep=',', row.names=FALSE, col.names=FALSE)
-perturb_unif <- function(df, mult=4) {
-  fr <- function(a,n) a + runif(n) - .5
-  fz <- function(z) { names(z) <- NULL; z }
-  fn <- function(r) data.frame(x=fr(r[1], mult), y=fr(r[2], mult), z=fz(r[3]))
-  o <- apply(df, 1, fn)
+perturb <- function(df, mult=4, fr=function(a) a + runif(length(a)) - .5) {
+  fn <- function(i) data.frame(x=fr(df[,1]), y=fr(df[,2]), z=df[,3])
+  o <- lapply(1:mult, fn)
   do.call(rbind, o)
 }
 
 
-# Add gaussian noise
-perturb_norm <- function(xy) {
+# Scaled Gaussian noise
+norm_pertruber <- function(a, scale=.2) a * scale * rnorm(length(a)) - 0.5
 
-}
