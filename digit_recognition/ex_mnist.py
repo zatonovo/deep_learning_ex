@@ -3,7 +3,7 @@ From https://github.com/Vict0rSch/deep_learning/blob/master/keras/feedforward/fe
 Also https://github.com/wxs/keras-mnist-tutorial/blob/master/MNIST%20in%20Keras.ipynb
 
 To run:
-from digit_recognition import ex_mnist
+import ex_mnist
 data = ex_mnist.load_data() # Do this explicitly so we can use other data
 model = ex_mnist.init_model()
 (model, loss) = ex_mnist.run_network(data, model)
@@ -69,7 +69,7 @@ def init_model():
     rms = RMSprop()
     model.compile(loss='categorical_crossentropy', optimizer=rms,
       metrics=['accuracy'])
-    print 'Model compield in {0} seconds'.format(time.time() - start_time)
+    print 'Model compiled in {0} seconds'.format(time.time() - start_time)
     return model
 
 
