@@ -7,7 +7,7 @@ import ex_mnist
 data = ex_mnist.load_data() # Do this explicitly so we can use other data
 model = ex_mnist.init_model()
 (model, loss) = ex_mnist.run_network(data, model)
-ex_mnist.plot_losses(loss, 'loss.png')
+ex_mnist.plot_losses('loss.png', loss)
 """
 
 import time
