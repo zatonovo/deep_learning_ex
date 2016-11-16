@@ -1,7 +1,7 @@
 PROJECT=function_approximation
 PYTHON?=python
 .PHONY: all run bash python test_openface
-HOST_DIR = ~/workspace/deep_learning_ex/${PROJECT}
+HOST_DIR = $(shell pwd)
 IMAGE_NAME = dlx/${PROJECT}
 
 

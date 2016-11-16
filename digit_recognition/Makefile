@@ -1,7 +1,7 @@
-PROJECT=digit_recognition
 PYTHON?=python
 .PHONY: all run bash python test_openface
-HOST_DIR = ~/workspace/deep_learning_ex/${PROJECT}
+PROJECT=$(shell basename `pwd`)
+HOST_DIR = $(shell pwd)
 IMAGE_NAME = dlx/${PROJECT}
 
 
