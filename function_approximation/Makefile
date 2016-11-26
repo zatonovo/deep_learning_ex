@@ -1,19 +1,19 @@
-PROJECT=function_approximation
+PROC?=cpu
+DOCKER?=docker
 PYTHON?=python
-.PHONY: all run bash python test_openface
+THEANO_FLAGS?=
+.PHONY: all run torch bash python test_openface
+PROJECT=$(shell basename `pwd`)
 HOST_DIR = $(shell pwd)
-IMAGE_NAME = dlx/${PROJECT}
+IMAGE_NAME = zatonovo/dlx_${PROC}:latest
 
-
-all:
-	docker build -t ${IMAGE_NAME} .
 
 torch:
-	docker run -it --rm -v ${HOST_DIR}:/code ${IMAGE_NAME}
+	${DOCKER} run -it --rm -v ${HOST_DIR}:/code ${IMAGE_NAME}
 
 bash:
-	docker run -it --rm -v ${HOST_DIR}:/code ${IMAGE_NAME} bash
+	${DOCKER} run -it --rm -v ${HOST_DIR}:/code ${IMAGE_NAME} bash
 
 python:
-	docker run -it --rm -v ${HOST_DIR}:/code ${IMAGE_NAME} python
+	${DOCKER} run -it --rm -v ${HOST_DIR}:/code -e ${IMAGE_NAME} ${PYTHON}
 

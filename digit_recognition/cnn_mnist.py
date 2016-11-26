@@ -164,3 +164,12 @@ def plot_losses(png, losses):
     ax.plot(losses)
     ax.set_title('Loss per batch')
     plt.savefig(png)
+
+
+
+if __name__ == '__main__':
+  data = load_data() # Do this explicitly so we can use other data
+  model = init_model()
+  (model, loss) = run_network(data, model)
+  plot_losses('loss.png', loss)
+  
