@@ -23,6 +23,9 @@ from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.optimizers import RMSprop
 from keras.datasets import mnist
 
+BATCH_SIZE = 256
+# (channels, width, height)
+INPUT_SHAPE = (1,28,28)
 
 class LossHistory(cb.Callback):
     def on_train_begin(self, logs={}):
@@ -49,15 +52,18 @@ def load_data():
     X_train = np.reshape(X_train, (60000, 1, 28,28))
     X_test = np.reshape(X_test, (10000, 1, 28,28))
 
-    print 'Data loaded.'
+    print 'Data loaded'
     return [X_train, X_test, y_train, y_test]
 
 
 def init_model():
+    """
+    """
     start_time = time.time()
-    print 'Compiling Model ... '
+    print 'Compiling model...'
     model = Sequential()
-    model.add(Convolution2D(64, 3,3, border_mode='same', input_shape=(1,28,28)))
+
+    model.add(Convolution2D(64, 3,3, border_mode='valid', input_shape=INPUT_SHAPE))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2,2)))
     model.add(Dropout(.25))
@@ -71,17 +77,19 @@ def init_model():
     model.compile(loss='categorical_crossentropy', optimizer=rms,
       metrics=['accuracy'])
     print 'Model compiled in {0} seconds'.format(time.time() - start_time)
+
+    model.summary()
     return model
 
 
 def init_model_1():
     start_time = time.time()
-    print 'Compiling Model ... '
+    print 'Compiling model...'
     model = Sequential()
-    model.add(Convolution2D(64, 3,3, border_mode='valid',input_shape=(1,28,28)))
+    model.add(Convolution2D(64, 3,3, border_mode='valid',input_shape=INPUT_SHAPE))
     model.add(Activation('relu'))
 
-    model.add(Convolution2D(64, 3,3, border_mode='valid',input_shape=(1,28,28)))
+    model.add(Convolution2D(64, 3,3, border_mode='valid'))
     model.add(Activation('relu'))
 
     model.add(MaxPooling2D(pool_size=(2,2)))
@@ -103,7 +111,7 @@ def init_model_1():
     return model
 
 
-def run_network(data=None, model=None, epochs=20, batch=256):
+def run_network(data=None, model=None, epochs=20, batch=BATCH_SIZE):
     try:
         start_time = time.time()
         if data is None:
@@ -171,5 +179,5 @@ if __name__ == '__main__':
   data = load_data() # Do this explicitly so we can use other data
   model = init_model()
   (model, loss) = run_network(data, model)
-  plot_losses('loss.png', loss)
+  plot_losses('cnn_mnist_loss.png', loss)
   

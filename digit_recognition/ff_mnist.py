@@ -1,4 +1,5 @@
 """
+Simple feed-forward network for MNIST digit recognition
 From https://github.com/Vict0rSch/deep_learning/blob/master/keras/feedforward/feedforward_keras_mnist.py
 Also https://github.com/wxs/keras-mnist-tutorial/blob/master/MNIST%20in%20Keras.ipynb
 
@@ -134,3 +135,10 @@ def plot_losses(png, losses):
     ax.plot(losses)
     ax.set_title('Loss per batch')
     plt.savefig(png)
+
+
+if __name__ == '__main__':
+  data = load_data() # Do this explicitly so we can use other data
+  model = init_model()
+  (model, loss) = run_network(data, model)
+  plot_losses('ff_mnist_loss.png', loss)

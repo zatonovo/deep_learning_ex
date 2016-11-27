@@ -4,11 +4,11 @@ THEANO_FLAGS?=
 .PHONY: all run bash python test_openface
 PROJECT=$(shell basename `pwd`)
 HOST_DIR = $(shell pwd)
-IMAGE_NAME = zatonovo/dlx:gpu
+IMAGE_NAME = zatonovo/dlx_gpu:latest
 
 
-all:
-	${DOCKER} build -t ${IMAGE_NAME} .
+all: bash
+
 
 torch:
 	${DOCKER} run -it --rm -v ${HOST_DIR}:/code ${IMAGE_NAME} th
