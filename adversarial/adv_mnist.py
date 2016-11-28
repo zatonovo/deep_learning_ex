@@ -1,12 +1,14 @@
 """
-http://ml4a.github.io/guides/convolutional_neural_networks/
+Simple feed-forward network for MNIST digit recognition
+From https://github.com/Vict0rSch/deep_learning/blob/master/keras/feedforward/feedforward_keras_mnist.py
+Also https://github.com/wxs/keras-mnist-tutorial/blob/master/MNIST%20in%20Keras.ipynb
 
 To run:
-import cnn_mnist
-data = cnn_mnist.load_data() # Do this explicitly so we can use other data
-model = cnn_mnist.init_model()
-(model, loss) = cnn_mnist.run_network(data, model)
-cnn_mnist.plot_losses('loss.png', loss)
+import ex_mnist
+data = ex_mnist.load_data() # Do this explicitly so we can use other data
+model = ex_mnist.init_model()
+(model, loss) = ex_mnist.run_network(data, model)
+ex_mnist.plot_losses('loss.png', loss)
 """
 
 import time
@@ -18,14 +20,10 @@ from matplotlib import pyplot as plt
 from keras.utils import np_utils
 import keras.callbacks as cb
 from keras.models import Sequential
-from keras.layers.convolutional import Convolution2D, MaxPooling2D
-from keras.layers.core import Dense, Dropout, Activation, Flatten
+from keras.layers.core import Dense, Dropout, Activation
 from keras.optimizers import RMSprop
 from keras.datasets import mnist
 
-BATCH_SIZE = 256
-# (channels, width, height)
-INPUT_SHAPE = (1,28,28)
 
 class LossHistory(cb.Callback):
     def on_train_begin(self, logs={}):
@@ -49,27 +47,23 @@ def load_data():
     y_train = np_utils.to_categorical(y_train, 10)
     y_test = np_utils.to_categorical(y_test, 10)
 
-    X_train = np.reshape(X_train, (60000, 1, 28,28))
-    X_test = np.reshape(X_test, (10000, 1, 28,28))
+    X_train = np.reshape(X_train, (60000, 784))
+    X_test = np.reshape(X_test, (10000, 784))
 
-    print 'Data loaded'
+    print 'Data loaded.'
     return [X_train, X_test, y_train, y_test]
 
 
 def init_model():
-    """
-    """
     start_time = time.time()
-    print 'Compiling model...'
+    print 'Compiling Model ... '
     model = Sequential()
-
-    model.add(Convolution2D(64, 3,3, border_mode='valid', input_shape=INPUT_SHAPE))
+    model.add(Dense(500, input_dim=784))
     model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size=(2,2)))
-    model.add(Dropout(.25))
-
-    model.add(Flatten())
-
+    model.add(Dropout(0.4))
+    model.add(Dense(300))
+    model.add(Activation('relu'))
+    model.add(Dropout(0.4))
     model.add(Dense(10))
     model.add(Activation('softmax'))
 
@@ -77,44 +71,13 @@ def init_model():
     model.compile(loss='categorical_crossentropy', optimizer=rms,
       metrics=['accuracy'])
     print 'Model compiled in {0} seconds'.format(time.time() - start_time)
-
-    model.summary()
     return model
 
 
-def init_model_1():
+def run_network(data=None, model=None, epochs=20, batch=256):
     """
-    Uses functional API to construct model.
-    https://keras.io/models/model/
+    Use alternative to ImageDataGenerator
     """
-    start_time = time.time()
-    print 'Compiling model...'
-    layers = [
-      Convolution2D(64, 3,3, border_mode='valid')
-      Activation('relu'),
-      Convolution2D(64, 3,3, border_mode='valid'),
-      Activation('relu'),
-      MaxPooling2D(pool_size=(2,2)),
-      Dropout(.25),
-      Flatten(),
-      Dense(128),
-      Activation('relu'),
-      Dropout(.5),
-      Dense(10),
-      Activation('softmax')
-    ]
-
-    ilayer = Input(shape=INPUT_SHAPE),
-    olayer = reduce(lambda a,l: a(l), layers, ilayer)
-    model = Model(ilayer, olayer)
-    rms = RMSprop()
-    model.compile(loss='categorical_crossentropy', optimizer=rms,
-      metrics=['accuracy'])
-    print 'Model compiled in {0} seconds'.format(time.time() - start_time)
-    return model
-
-
-def run_network(data=None, model=None, epochs=20, batch=BATCH_SIZE):
     try:
         start_time = time.time()
         if data is None:
@@ -177,10 +140,8 @@ def plot_losses(png, losses):
     plt.savefig(png)
 
 
-
 if __name__ == '__main__':
   data = load_data() # Do this explicitly so we can use other data
   model = init_model()
   (model, loss) = run_network(data, model)
-  plot_losses('cnn_mnist_loss.png', loss)
-  
+  plot_losses('ff_mnist_loss.png', loss)
