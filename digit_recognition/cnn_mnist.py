@@ -18,6 +18,7 @@ from matplotlib import pyplot as plt
 from keras.utils import np_utils
 import keras.callbacks as cb
 from keras.models import Sequential
+from keras.layers import Input
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.optimizers import RMSprop
@@ -105,7 +106,7 @@ def init_model_1():
     ]
 
     ilayer = Input(shape=INPUT_SHAPE),
-    olayer = reduce(lambda a,l: a(l), layers, ilayer)
+    olayer = reduce(lambda a,l: l(a), layers, ilayer)
     model = Model(ilayer, olayer)
     rms = RMSprop()
     model.compile(loss='categorical_crossentropy', optimizer=rms,
